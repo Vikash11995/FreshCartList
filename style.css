@@ -1,0 +1,177 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: whitesmoke;
+
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    min-height: 100vh;
+    margin: 0;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
+}
+nav{
+    width: 100%;
+    height: 12vh;
+padding: 10px 40px;
+border-bottom: 1px solid #aaa;
+}
+#navItem img{
+    width: 6vw;
+    /* height: auto; */
+}
+#navItem{
+    display: flex;
+    flex-direction: row;
+    /* background-color: #388e3c; */
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.todo-container {
+    background: #c6b72ec3;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    width: 350px;
+}
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+#taskInput {
+    width: 100%;
+    padding: 10px;
+    /* height: 6vh; */
+    font-size: 16px;
+    border: 1px solid #bbb;
+    border-radius: 10px 0 0 10px;
+    /* margin-bottom: 10px; */
+    box-sizing: border-box;
+    resize: none;
+    display: flex;
+    align-items: center;
+    outline: none;
+}
+#sibling{
+    display: flex;
+    width: 100%;
+    min-height: 6vh;
+    margin-bottom: 20px;
+}
+#addBtn {
+    width: 20%;
+    padding: 10px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    cursor: pointer;
+    /* margin-bottom: 20px; */
+}
+#addBtn:hover {
+    background: #388e3c;
+}
+ul#taskList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+ul#taskList li {
+    background: #ffffffd7;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    width: 91%;
+    float: right;
+}
+#taskList li::before{
+  content: '';
+    position: absolute;
+   background-image: url('dry-clean.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+    left: -25px;
+}
+ul#taskList li.completed {
+    text-decoration: line-through;
+    color: #aaa;
+    background: #f9f9f984;
+}
+ul#taskList li.completed::before{
+    content: '';
+    position: absolute;
+   background-image: url('tick.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+    left: -25px;
+}
+
+.delete-btn{
+    background: transparent;
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    padding: 3px 3px 1px 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.delete-btn img{
+    width: 20px;
+  
+}
+.delete-btn:hover {
+    background: #bbb;
+transform: scale(1.05);
+}
+#liCount{
+    /* background-color: blue; */
+    text-align: center;
+    color: rgb(128, 203, 23);
+}
+@media screen and (max-width:600px) {
+   body{
+    padding: 24px;
+   }
+   .todo-container{
+    min-height: 5vh;
+    /* margin-top: -40vh; */
+   }
+   #navItem img{
+    width: 8vh;
+   }
+   #taskList li::before{
+  
+      left: -28px;
+  }
+  ul#taskList li.completed::before{
+ 
+      left: -28px;
+  }
+  nav{
+    /* width: 100%; */
+    height: 8vh;
+
+}
+  
+}
