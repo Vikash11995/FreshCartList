@@ -1,4 +1,4 @@
-
+const clearAll = document.getElementById('clearAll');
 const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
@@ -80,7 +80,24 @@ function addTask(taskText, completed = false) {
     taskList.appendChild(li);
     storeTasks();
 }
+// Clear all tasks
+function showClear(){
+    if(listCounter > 0){
+        clearAll.style.display = 'block';
+    }
+    else{
+        clearAll.style.display = 'none';
+    }
 
+}
+clearAll.addEventListener('click', function() {
+    if (confirm('Are you sure you want to clear all tasks?'))
+         {
+        taskList.innerHTML = '';    
+        storeTasks();
+        liCount();
+    }   
+});
 // Add tasks on button click
 addBtn.addEventListener('click', addTasksFromInput,liCount);
 
@@ -129,6 +146,7 @@ window.addEventListener('DOMContentLoaded', function() {
 function liCount(){
     listCounter = taskList.getElementsByTagName("li").length;
     document.getElementById("liCount").innerText = listCounter;
+    showClear();
 }
 // setInterval(liCount, 100);
 

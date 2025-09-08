@@ -2,8 +2,9 @@
 body {
     font-family: Arial, sans-serif;
     background: whitesmoke;
-
-    display: flex;
+}
+#wrapper{
+     display: flex;
     justify-content: center;
     /* align-items: center; */
     min-height: 100vh;
@@ -30,6 +31,22 @@ border-bottom: 1px solid #aaa;
 
 }
 
+#clearAll{
+    width: 35%;
+    padding: 10px ;
+    background: rgb(160, 17, 17);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    cursor: pointer;
+    /* margin-bottom: 20px; */
+}
+#clear{
+    width: 100%;
+    /* background-color: blue; */
+    transform: translate(30%,50%);
+}
 .todo-container {
     background: #c6b72ec3;
     padding: 30px 40px;
