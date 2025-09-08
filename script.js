@@ -120,6 +120,7 @@ taskInput.addEventListener('paste', function(e) {
         lines.forEach(line => addTask(line));
         taskInput.value = '';
         storeTasks();
+        liCount();
     } else {
         // Default paste for single line
         document.execCommand('insertText', false, text);
@@ -151,4 +152,5 @@ function liCount(){
 // setInterval(liCount, 100);
 
 // Initial count update
+
 liCount();
