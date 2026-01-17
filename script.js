@@ -3,32 +3,27 @@ const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 let listCounter = 0;
-// Save tasks to localStorage as an array of objects
-// The storeTasks function saves the current list of tasks to the browser's localStorage.
-// It does this by collecting all <li> elements (each representing a task) from the taskList.
-// For each <li>, it creates an object with two properties:
-//   - text: the text content of the task (taken from the first child node of the <li>)
-//   - completed: a boolean indicating whether the task is marked as completed (i.e., if the <li> has the 'completed' class)
-// All these task objects are put into an array called 'tasks'.
-// The array is then converted to a JSON string and saved in localStorage under the key 'tasks'.
-// Finally, the function clears the input field (taskInput.value = "").
 
+// Sort tasks in the UL alphabetically (ignoring case)
+function sortTaskList() {
+    const items = Array.from(taskList.getElementsByTagName('li'));
+    items.sort((a, b) => {
+        const textA = a.childNodes[0].nodeValue.trim().toLowerCase();
+        const textB = b.childNodes[0].nodeValue.trim().toLowerCase();
+        return textA.localeCompare(textB);
+    });
+    items.forEach(li => taskList.appendChild(li)); // Reattach in sorted order
+}
 
 function storeTasks() {
     const tasks = [];
-    // Loop through all <li> elements in the task list
     taskList.querySelectorAll('li').forEach(li => {
         tasks.push({
-            // Get the text of the task (assumes the first child node is the text)
             text: li.childNodes[0].nodeValue,
-            // Check if the task is marked as completed
             completed: li.classList.contains('completed')
         });
-        
     });
-    // Save the tasks array to localStorage as a JSON string
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    // Clear the input field after storing
     taskInput.value = ""
 }
 
@@ -36,20 +31,22 @@ function storeTasks() {
 function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     taskList.innerHTML = '';
-    tasks.forEach(task => addTask(task.text, task.completed));
+    tasks.forEach(task => addTask(task.text, task.completed, false));
+    sortTaskList();
 }
 
 // Add tasks from textarea (one per line)
 function addTasksFromInput() {
     const lines = taskInput.value.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
-    lines.forEach(line => addTask(line));
+    lines.forEach(line => addTask(line, false, false));
     taskInput.value = '';
+    sortTaskList();
     storeTasks();
     liCount();
 }
 
-// Add a single task to the list
-function addTask(taskText, completed = false) {
+// Add a single task to the list (with option not to sort for bulk adds)
+function addTask(taskText, completed = false, shouldSort = true) {
     const li = document.createElement('li');
     li.textContent = taskText;
 
@@ -57,29 +54,34 @@ function addTask(taskText, completed = false) {
         li.classList.add('completed');
     }
 
-    // Delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.innerHTML = `<span id="delBtn"><img src="cross.png" alt=""></span>`;
     deleteBtn.className = 'delete-btn';
     deleteBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         li.remove();
+        sortTaskList();
         storeTasks();
         liCount();
     });
 
-    // Toggle completed on click
     li.addEventListener('click', function(e) {
         if (e.target !== deleteBtn) {
             li.classList.toggle('completed');
+            sortTaskList();
             storeTasks();
         }
     });
 
     li.appendChild(deleteBtn);
     taskList.appendChild(li);
+
+    if (shouldSort) {
+        sortTaskList();
+    }
     storeTasks();
 }
+
 // Clear all tasks
 function showClear(){
     if(listCounter > 0){
@@ -88,18 +90,18 @@ function showClear(){
     else{
         clearAll.style.display = 'none';
     }
-
 }
+
 clearAll.addEventListener('click', function() {
-    if (confirm('Are you sure you want to clear all tasks?'))
-         {
-        taskList.innerHTML = '';    
+    if (confirm('Are you sure you want to clear all tasks?')) {
+        taskList.innerHTML = '';
         storeTasks();
         liCount();
-    }   
+    }
 });
+
 // Add tasks on button click
-addBtn.addEventListener('click', addTasksFromInput,liCount);
+addBtn.addEventListener('click', addTasksFromInput);
 
 // Add tasks on pressing Enter (without Shift)
 taskInput.addEventListener('keydown', function(e) {
@@ -116,22 +118,19 @@ taskInput.addEventListener('paste', function(e) {
     const text = (e.clipboardData || window.clipboardData).getData('text');
     const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
     if (lines.length > 1) {
-        // Add all lines as tasks immediately
-        lines.forEach(line => addTask(line));
+        lines.forEach(line => addTask(line, false, false));
         taskInput.value = '';
+        sortTaskList();
         storeTasks();
         liCount();
     } else {
-        // Default paste for single line
         document.execCommand('insertText', false, text);
     }
 });
 
 // Store tasks on every input in the task input field
 taskInput.addEventListener('input', function() {
-    // This only stores the input field value, not the task list
-    // If you want to store the input as a draft, you can do so here
-    localStorage.setItem('taskInputDraft', taskInput.value,listCounter);
+    localStorage.setItem('taskInputDraft', taskInput.value);
 });
 
 // Restore draft input if available
@@ -149,8 +148,5 @@ function liCount(){
     document.getElementById("liCount").innerText = listCounter;
     showClear();
 }
-// setInterval(liCount, 100);
-
-// Initial count update
 
 liCount();
