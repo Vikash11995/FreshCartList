@@ -10,8 +10,6 @@ let listCounter = 0;
 //     items.sort((a, b) => {
 //         const textA = a.childNodes[0].nodeValue.trim().toLowerCase();
 //         const textB = b.childNodes[0].nodeValue.trim().toLowerCase();
-//         console.log(textA)
-//         console.log(textB)
 //         return textA.localeCompare(textB);
 //     });
 //     items.forEach(li => taskList.appendChild(li)); // Reattach in sorted order
@@ -62,7 +60,7 @@ function addTask(taskText, completed = false, shouldSort = true) {
     deleteBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         li.remove();
-        sortTaskList();
+        // sortTaskList();
         storeTasks();
         liCount();
     });
@@ -70,7 +68,7 @@ function addTask(taskText, completed = false, shouldSort = true) {
     li.addEventListener('click', function(e) {
         if (e.target !== deleteBtn) {
             li.classList.toggle('completed');
-            sortTaskList();
+            // sortTaskList();
             storeTasks();
         }
     });
@@ -78,9 +76,7 @@ function addTask(taskText, completed = false, shouldSort = true) {
     li.appendChild(deleteBtn);
     taskList.appendChild(li);
 
-    if (shouldSort) {
-        sortTaskList();
-    }
+  
     storeTasks();
 }
 
@@ -122,7 +118,7 @@ taskInput.addEventListener('paste', function(e) {
     if (lines.length > 1) {
         lines.forEach(line => addTask(line, false, false));
         taskInput.value = '';
-        sortTaskList();
+        // sortTaskList();
         storeTasks();
         liCount();
     } else {
