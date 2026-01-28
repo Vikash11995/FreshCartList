@@ -5,15 +5,17 @@ const taskList = document.getElementById('taskList');
 let listCounter = 0;
 
 // Sort tasks in the UL alphabetically (ignoring case)
-function sortTaskList() {
-    const items = Array.from(taskList.getElementsByTagName('li'));
-    items.sort((a, b) => {
-        const textA = a.childNodes[0].nodeValue.trim().toLowerCase();
-        const textB = b.childNodes[0].nodeValue.trim().toLowerCase();
-        return textA.localeCompare(textB);
-    });
-    items.forEach(li => taskList.appendChild(li)); // Reattach in sorted order
-}
+// function sortTaskList() {
+//     const items = Array.from(taskList.getElementsByTagName('li'));
+//     items.sort((a, b) => {
+//         const textA = a.childNodes[0].nodeValue.trim().toLowerCase();
+//         const textB = b.childNodes[0].nodeValue.trim().toLowerCase();
+//         console.log(textA)
+//         console.log(textB)
+//         return textA.localeCompare(textB);
+//     });
+//     items.forEach(li => taskList.appendChild(li)); // Reattach in sorted order
+// }
 
 function storeTasks() {
     const tasks = [];
@@ -32,7 +34,7 @@ function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     taskList.innerHTML = '';
     tasks.forEach(task => addTask(task.text, task.completed, false));
-    sortTaskList();
+    // sortTaskList();
 }
 
 // Add tasks from textarea (one per line)
@@ -40,7 +42,7 @@ function addTasksFromInput() {
     const lines = taskInput.value.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
     lines.forEach(line => addTask(line, false, false));
     taskInput.value = '';
-    sortTaskList();
+    // sortTaskList();
     storeTasks();
     liCount();
 }
