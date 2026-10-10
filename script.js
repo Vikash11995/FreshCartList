@@ -4,27 +4,54 @@ const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 let listCounter = 0;
 
-// Sort tasks in the UL alphabetically (ignoring case)
-// function sortTaskList() {
-//     const items = Array.from(taskList.getElementsByTagName('li'));
-//     items.sort((a, b) => {
-//         const textA = a.childNodes[0].nodeValue.trim().toLowerCase();
-//         const textB = b.childNodes[0].nodeValue.trim().toLowerCase();
-//         return textA.localeCompare(textB);
-//     });
-//     items.forEach(li => taskList.appendChild(li)); // Reattach in sorted order
-// }
+// copy code start from here
+
+const copyBtn = document.getElementById("copyAll");
+
+copyBtn.addEventListener("click", async () => {
+  // Collect the plain text content from each task <li>
+  const items = taskList.querySelectorAll('li');
+  if (!items.length) return;
+
+  const text = Array.from(items)
+    .map((el, i) => `${i + 1}. ${el.textContent.replace(/[\r\n]+/g,"").replace(/(\s)+$/, "").replace(/(\s)*$/, "").replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[\s\u200B-\u200D\uFEFF]+$/, "")}`.replace(/(\s)+$/, ""))
+    .map(line => line.replace(/(×)+$/,"").trim())
+    .join('\n');
+
+  if (!text.trim()) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    copyBtn.textContent = "Copied!";
+    setTimeout(() => (copyBtn.textContent = "Copy All"), 1500);
+  } catch (err) {
+    console.error("Copy failed:", err);
+  }
+});
+
+// copy code ends here
 
 function storeTasks() {
     const tasks = [];
     taskList.querySelectorAll('li').forEach(li => {
+        // Get the task text (exclude the delete button)
+        let text = "";
+        // Get the text up to the first child that is a button
+        for (const node of li.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                text += node.nodeValue;
+            }
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === "BUTTON") {
+                break;
+            }
+        }
         tasks.push({
-            text: li.childNodes[0].nodeValue,
+            text: text.trim(),
             completed: li.classList.contains('completed')
         });
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    taskInput.value = ""
+    taskInput.value = "";
 }
 
 // Load tasks from localStorage and render them
@@ -48,7 +75,10 @@ function addTasksFromInput() {
 // Add a single task to the list (with option not to sort for bulk adds)
 function addTask(taskText, completed = false, shouldSort = true) {
     const li = document.createElement('li');
-    li.textContent = taskText;
+    // Instead of setting textContent, use a span for task text for extensibility
+    const textSpan = document.createElement('span');
+    textSpan.className = "todo-text";
+    textSpan.textContent = taskText;
 
     if (completed) {
         li.classList.add('completed');
@@ -65,18 +95,19 @@ function addTask(taskText, completed = false, shouldSort = true) {
         liCount();
     });
 
+    li.appendChild(textSpan);
+    li.appendChild(deleteBtn);
+
     li.addEventListener('click', function(e) {
-        if (e.target !== deleteBtn) {
+        if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
             li.classList.toggle('completed');
             // sortTaskList();
             storeTasks();
         }
     });
 
-    li.appendChild(deleteBtn);
     taskList.appendChild(li);
 
-  
     storeTasks();
 }
 
